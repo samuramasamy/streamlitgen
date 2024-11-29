@@ -77,21 +77,16 @@ uploadimage_page = st.Page(
     
 )
 
-
-
-# pg = st.navigation(
-#     {
-#         "Info": [about_page],
-#         "Project": [moodboard_page],
-#         "":[uploadprompts_page],
-#         "":[uploadimage_page]
-#     }
-# )
+promptimage_page = st.Page(
+    page = "views/promptimages.py",
+    title= "promptimages",
+    icon= ":material/image:"
+)
 
 pg = st.navigation(
     {
         "Info": [about_page],
-        "Projects": [moodboard_page, uploadprompts_page, uploadimage_page],
+        "Projects": [moodboard_page, uploadprompts_page, uploadimage_page,promptimage_page],
     }
 )
 pg.run()
