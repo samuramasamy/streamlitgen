@@ -363,12 +363,12 @@ with col2:
 
     # Image rating slider
         st.write(f"Prompt:- {selected_prompt}")
-        prompt_review = st.slider(f"Rate Prompt:", 1, 10, value=0, format="%d")
+        prompt_review = st.slider(f"Rate Prompt:", 1, 10, value=1, format="%d")
 
         if st.button(f"prompt rating"):
             update_prompt_review(serial_nos, prompt_review)
                     
-        corelation_review = st.slider(f"Co-relation Rate:", 1, 10, value=0, format="%d")
+        corelation_review = st.slider(f"Rate Correlation", 1, 10, value=1, format="%d")
 
         if st.button(f"correlation rating"):
             update_corelation_review(serial_nos, corelation_review)
