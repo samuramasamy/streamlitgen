@@ -15,8 +15,20 @@ db_connection = {
 }
 
 # Directory to save uploaded images
-UPLOAD_DIR = os.path.abspath("uploaded_images")
-Path(UPLOAD_DIR).mkdir(parents=True, exist_ok=True)  # Create directory if it doesn't exist
+# UPLOAD_DIR = os.path.abspath("uploaded_images")
+# Path(UPLOAD_DIR).mkdir(parents=True, exist_ok=True)  # Create directory if it doesn't exist
+import tempfile
+
+uploaded_file = st.file_uploader("Choose an image file", type=["jpg", "jpeg", "png"])
+
+if uploaded_file is not None:
+    # Use a temporary directory to store the uploaded file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
+        temp_file.write(uploaded_file.getbuffer())
+        temp_file_path = temp_file.name
+
+    # Display the image
+    st.image(temp_file_path, caption="Uploaded Image", use_container_width=True)
 
 # Function to fetch data from the 'upload_images' table
 def fetch_data_from_db():
