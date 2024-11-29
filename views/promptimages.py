@@ -2,6 +2,7 @@ import streamlit as st
 import psycopg2
 import os
 import tempfile
+import pandas as pd
 from pathlib import Path
 
 # Database connection configuration
@@ -14,21 +15,24 @@ db_connection = {
 }
 
 # Directory to save uploaded images
-# UPLOAD_DIR = os.path.abspath("uploaded_images")
-# Path(UPLOAD_DIR).mkdir(parents=True, exist_ok=True)  # Create directory if it doesn't exist
-st.title("Image Upload Example")
+UPLOAD_DIR = os.path.abspath("uploaded_images")
+Path(UPLOAD_DIR).mkdir(parents=True, exist_ok=True)  # Create directory if it doesn't exist
 
-# Add file uploader
-uploaded_file = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
-
-if uploaded_file is not None:
-    # Use a temporary directory for storage
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
-        temp_file.write(uploaded_file.getbuffer())
-        temp_file_path = temp_file.name
-
-    # Display the image
-    st.image(temp_file_path, caption="Uploaded Image", use_column_width=True)
+# Function to fetch data from the 'upload_images' table
+def fetch_data_from_db():
+    try:
+        # Connect to PostgreSQL database
+        conn = psycopg2.connect(**db_connection)
+        query = "SELECT * FROM upload_images;"  # SQL query to fetch all data from 'upload_images' table
+        df = pd.read_sql(query, conn)  # Using pandas to fetch data into a dataframe
+        conn.close()  # Close the connection
+        return df
+    except psycopg2.OperationalError as e:
+        st.error(f"OperationalError: Unable to connect to the database: {e}")
+        return None
+    except Exception as e:
+        st.error(f"Error: {e}")
+        return None
     
 # Function to insert the image record into the database
 def insert_image(sno, image_filename, image_feedback=0, image_status="Pending"):
