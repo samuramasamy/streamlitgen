@@ -353,7 +353,7 @@ for ext in supported_formats:
             image, 
             caption=f"Image {st.session_state.image_number}", 
             width=350  # Adjust this value to set the image width
-            )
+        )
             image_found = True  # Mark the image as found
             break  # Exit the loop as we found the image
     except Exception as e:
