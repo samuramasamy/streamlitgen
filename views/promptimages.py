@@ -349,7 +349,11 @@ for ext in supported_formats:
             blob = bucket.blob(image_path)
             image_data = blob.download_as_bytes()  # Download the image data
             image = Image.open(BytesIO(image_data))  # Open the image
-            st.image(image, caption=f"Image {st.session_state.image_number}.{ext}", use_container_width=True)
+            st.image(
+            image, 
+            caption=f"Image {st.session_state.image_number}", 
+            width=350  # Adjust this value to set the image width
+            )
             image_found = True  # Mark the image as found
             break  # Exit the loop as we found the image
     except Exception as e:
