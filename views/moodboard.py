@@ -302,8 +302,9 @@ image_path = os.path.join(image_prefix, image_name)
 #         st.error(f"Image {st.session_state.image_number} not found.")
 # except Exception as e:
 #     st.error(f"Error loading image: {e}")
+
 try:
-     if image_exists_in_bucket(bucket, image_path):
+    if image_exists_in_bucket(bucket, image_path):
         blob = bucket.blob(image_path)
         image_data = blob.download_as_bytes()
         image = Image.open(BytesIO(image_data))
@@ -312,12 +313,14 @@ try:
         st.image(
             image, 
             caption=f"Image {st.session_state.image_number}", 
-            width=300  # Adjust this value to set the image width
+            width=350  # Adjust this value to set the image width
         )
-      else:
+    else:
         st.error(f"Image {st.session_state.image_number} not found.")
 except Exception as e:
     st.error(f"Error loading image: {e}")
+
+
 col1, col2 = st.columns([1, 2])
 
 with col1:
