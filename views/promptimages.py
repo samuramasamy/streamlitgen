@@ -308,14 +308,7 @@ with col2:
             else:
                 st.warning("Please fill in all required fields for image update.")
 
-# Display data from the 'upload_images' table
-st.subheader("Existing Data")
-df = fetch_data_from_db()
-if df is not None:
-    st.write("Data from the 'upload_images' table:")
-    st.dataframe(df)
-else:
-    st.write("No data available.")
+
 
 
 # Image navigation and prompt management
