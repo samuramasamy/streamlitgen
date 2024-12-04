@@ -318,7 +318,7 @@ with col1:
 
 with col2:
     try:
-    if image_exists_in_bucket(bucket, image_path):
+     if image_exists_in_bucket(bucket, image_path):
         blob = bucket.blob(image_path)
         image_data = blob.download_as_bytes()
         image = Image.open(BytesIO(image_data))
@@ -329,9 +329,9 @@ with col2:
             caption=f"Image {st.session_state.image_number}", 
             width=300  # Adjust this value to set the image width
         )
-    else:
+      else:
         st.error(f"Image {st.session_state.image_number} not found.")
-except Exception as e:
+    except Exception as e:
     st.error(f"Error loading image: {e}")
     
     prompts_df = get_prompts(st.session_state.image_number)
