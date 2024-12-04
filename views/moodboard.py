@@ -313,8 +313,7 @@ try:
         st.image(
             image, 
             caption=f"Image {st.session_state.image_number}", 
-            width=350
-            height=30 # Adjust this value to set the image width
+            width=350  # Adjust this value to set the image width
         )
     else:
         st.error(f"Image {st.session_state.image_number} not found.")
