@@ -303,7 +303,21 @@ image_path = os.path.join(image_prefix, image_name)
 # except Exception as e:
 #     st.error(f"Error loading image: {e}")
 
-try:
+
+col1, col2 = st.columns([1, 2])
+
+with col1:
+    
+    # Get existing review and status from the database
+    image_review_score, image_status = get_image_feedback(image_name)
+    # Image rating slider
+    image_review = st.slider(f"Rate Image {st.session_state.image_number}:", 1, 10, value=image_review_score, format="%d")
+    if st.button(f"Submit rating"):
+        update_image_review(image_name, image_review)
+
+
+with col2:
+    try:
     if image_exists_in_bucket(bucket, image_path):
         blob = bucket.blob(image_path)
         image_data = blob.download_as_bytes()
@@ -320,19 +334,6 @@ try:
 except Exception as e:
     st.error(f"Error loading image: {e}")
     
-col1, col2 = st.columns([1, 2])
-
-with col1:
-    
-    # Get existing review and status from the database
-    image_review_score, image_status = get_image_feedback(image_name)
-    # Image rating slider
-    image_review = st.slider(f"Rate Image {st.session_state.image_number}:", 1, 10, value=image_review_score, format="%d")
-    if st.button(f"Submit rating"):
-        update_image_review(image_name, image_review)
-
-
-with col2:
     prompts_df = get_prompts(st.session_state.image_number)
     if not prompts_df.empty:
         prompt_options = prompts_df['image_prompts'].tolist()
