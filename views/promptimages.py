@@ -343,20 +343,28 @@ def update_image_number():
     except ValueError:
         st.error("Please enter a valid integer.")
 
-# Display the selected image
-image_name = f"image{st.session_state.image_number}.jpg"
-image_path = os.path.join("Upload_images/Moodboard Images/", image_name)
+# Display the selected image with support for jpg, jpeg, and png formats
+supported_formats = ["jpg", "jpeg", "png"]
+image_found = False  # Flag to track if the image is found
 
-try:
-    if image_exists_in_bucket(bucket, image_path):
-        blob = bucket.blob(image_path)
-        image_data = blob.download_as_bytes()
-        image = Image.open(BytesIO(image_data))
-        st.image(image, caption=f"Image {st.session_state.image_number}", use_container_width=True)
-    else:
-        st.error(f"Image {st.session_state.image_number} not found in the bucket.")
-except Exception as e:
-    st.error(f"Error loading image: {e}")
+for ext in supported_formats:
+    image_name = f"image{st.session_state.image_number}.{ext}"
+    image_path = os.path.join("Upload_images/Moodboard Images/", image_name)
+
+    try:
+        if image_exists_in_bucket(bucket, image_path):  # Check if the image exists in the bucket
+            blob = bucket.blob(image_path)
+            image_data = blob.download_as_bytes()  # Download the image data
+            image = Image.open(BytesIO(image_data))  # Open the image
+            st.image(image, caption=f"Image {st.session_state.image_number}.{ext}", use_container_width=True)
+            image_found = True  # Mark the image as found
+            break  # Exit the loop as we found the image
+    except Exception as e:
+        st.error(f"Error loading image: {e}")  # Log error and continue checking other formats
+
+# If no image is found after trying all formats, display an error
+if not image_found:
+    st.error(f"Image {st.session_state.image_number} not found in the bucket with supported formats ({', '.join(supported_formats)}).")
 
 # Prompt Management Section
 st.subheader("Prompt Management")
