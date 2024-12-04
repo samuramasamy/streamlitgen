@@ -291,18 +291,35 @@ with col3:
 image_name = f"image{st.session_state.image_number}.jpg"
 image_path = os.path.join(image_prefix, image_name)
 
-# Load the image from Google Cloud Storage
+# # Load the image from Google Cloud Storage
+# try:
+#     if image_exists_in_bucket(bucket, image_path):
+#         blob = bucket.blob(image_path)
+#         image_data = blob.download_as_bytes()
+#         image = Image.open(BytesIO(image_data))
+#         st.image(image, caption=f"Image {st.session_state.image_number}")
+#     else:
+#         st.error(f"Image {st.session_state.image_number} not found.")
+# except Exception as e:
+#     st.error(f"Error loading image: {e}")
+
 try:
     if image_exists_in_bucket(bucket, image_path):
         blob = bucket.blob(image_path)
         image_data = blob.download_as_bytes()
         image = Image.open(BytesIO(image_data))
-        st.image(image, caption=f"Image {st.session_state.image_number}")
+        
+        # Display the image with a medium size
+        st.image(
+            image, 
+            caption=f"Image {st.session_state.image_number}", 
+            width=350  # Adjust this value to set the image width
+        )
     else:
         st.error(f"Image {st.session_state.image_number} not found.")
 except Exception as e:
     st.error(f"Error loading image: {e}")
-
+    
 col1, col2 = st.columns([1, 2])
 
 with col1:
@@ -334,7 +351,7 @@ with col2:
         """, unsafe_allow_html=True)
 
         # Use FontAwesome for Edit button with larger icon
-        if st.button("🖉 ", key=f"edit_prompt_{serial_nos}", help="Edit the prompt"):
+        if st.button("Edit🖉 ", key=f"edit_prompt_{serial_nos}", help="Edit the prompt"):
             st.session_state.edit_mode = True
 
         # Display the text area to edit the prompt if in edit mode
@@ -368,7 +385,7 @@ with col2:
         if st.button(f"prompt rating"):
             update_prompt_review(serial_nos, prompt_review)
                     
-        corelation_review = st.slider(f"Rate Correlation", 1, 10, value=1, format="%d")
+        corelation_review = st.slider(f"Correlation Rate:", 1, 10, value=1, format="%d")
 
         if st.button(f"correlation rating"):
             update_corelation_review(serial_nos, corelation_review)
@@ -383,7 +400,7 @@ with col2:
     st.write(f"Add a new prompt for Image {st.session_state.image_number}:")
 
     # Check if button clicked
-    if st.button(f"Add New Prompt for Image {st.session_state.image_number}"):
+    if st.button(f"Add New Prompt"):
         # Set a session state variable to show the text area after the button is clicked
         st.session_state.show_new_prompt_text_area = True
 
@@ -394,7 +411,7 @@ with col2:
                                         key=f"new_prompts_{st.session_state.image_number}")
 
         # Submit button to add the new prompt
-        if st.button(f"Submit New Prompt for Image {st.session_state.image_number}"):
+        if st.button(f"Submit New Prompt"):
             # Call the function to add the new prompt to the database
             add_new_prompt(st.session_state.image_number, new_prompt_input)
 
